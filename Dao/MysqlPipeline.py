@@ -13,9 +13,7 @@
 
 import pymysql
 
-
-def insert_data(item):
-    printItem(item)
+def connectDB():
     connection = pymysql.connect(
         host='localhost',
         user='root',
@@ -23,6 +21,17 @@ def insert_data(item):
         db='China6_DB',
         charset='utf8mb4',
     )
+    return connection
+
+def insert_data(connection, item):
+    printItem(item)
+    # connection = pymysql.connect(
+    #     host='localhost',
+    #     user='root',
+    #     password='ninja123',
+    #     db='China6_DB',
+    #     charset='utf8mb4',
+    # )
 
     try:
         with connection.cursor() as cursor:

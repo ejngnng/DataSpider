@@ -18,6 +18,7 @@ from Spider import China6
 from common import download
 from bs4 import BeautifulSoup
 from Dao import MysqlPipeline
+import random
 
 class ProducerUrl(threading.Thread):
     def __init__(self, threadName, dataQue):
@@ -34,7 +35,7 @@ class ProducerUrl(threading.Thread):
             targetLink = China6.getAtag(response)
             for link in targetLink:
                 self.dataQ.put(China6.buildUrl(link.get('href')))
-        time.sleep(10)
+            time.sleep(random.randint(3, 10))
 
 class ParserResponse(threading.Thread):
     def __init__(self, threadName, urlQue, dataQue):
@@ -58,7 +59,7 @@ class ParserResponse(threading.Thread):
                     print('targetData: ' + targetData)
                     data.append(targetData)
                 self.dataQ.put(data)
-            time.sleep(5)
+            time.sleep(random.randint(1, 5))
 
 class InsertDB(threading.Thread):
     def __init__(self, threadName, dataQue):
@@ -66,11 +67,12 @@ class InsertDB(threading.Thread):
         self.dataQ = dataQue
 
     def run(self):
+
         while True:
             print('insert data')
             item = self.dataQ.get()
-            MysqlPipeline.insert_data(item)
-            time.sleep(1)
+            conn = MysqlPipeline.connectDB()
+            MysqlPipeline.insert_data(conn, item)
 
 def main():
     urlQueue = queue.Queue()
@@ -82,9 +84,9 @@ def main():
     Parser.start()
     Pipline.start()
 
-    Producer.join()
-    Parser.join()
-    Pipline.join()
+    # Producer.join()
+    # Parser.join()
+    # Pipline.join()
 
 
 if __name__ == '__main__':
