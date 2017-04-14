@@ -12,42 +12,33 @@
 ###################################################
 
 from bs4 import BeautifulSoup
+import re
 
-class China6:
-
+def getTargetUrl():
     start_urls = []
-    domain = []
-    dataLink = []
-    item = []
+    for i in range(1, 2042):
+        start_urls.append('http://wuliu.6-china.com/freight/carlist/p' + str(i) + '.html')
+    return start_urls
 
-    def __init__(self):
-        for i in range(1, 2042):
-            self.start_urls.append('http://wuliu.6-china.com/freight/carlist/' + str(i) + '.html')
-        self.domain = 'http://wuliu.6-china.com'
 
-    def getStartUrls(self):
-        return self.start_urls
+def buildUrl(aTag):
+    domain = 'http://wuliu.6-china.com'
+    url = domain + aTag
+    print('targetUrl: ' + url)
+    return url
 
-    def getDataLinks(self):
-        return self.dataLink
+def getAtag(response):
+    page = BeautifulSoup(response.data, 'lxml')
+    targetLink = page.find_all('a', href=re.compile('/freight/cardetail-'))
+    return targetLink
+    # for link in targetLink:
+    #     dataLink.append(buildUrl(link))
 
-    def buildUrl(self, aTag):
-        url = self.domain + aTag
-        return url
-
-    def getAtag(self, response):
-        page = BeautifulSoup(response.data, 'lxml')
-        targetLink = page.find_all('a', href=re.compile('/freight/cardetail-'))
-
-        for link in targetLink:
-            self.__dataLink.append(self.buildUrl(link))
-
-    def parseData(self, targetResponse):
-        page = BeautifulSoup(response.data, 'lxml')
-        dataClass = page.find_all(class_='photo')
-        for item in dataClass:
-            print(item)
-            targetItem = item.find_all('li')
-            for txt in targetItem:
-                print(txt.get_text())
-                self.item.append(txt.get_text())
+def parseData(response):
+    data = []
+    page = BeautifulSoup(response.data, 'lxml')
+    dataClass = page.find_all(class_='photo')
+    for item in dataClass:
+        targetItem = item.find_all('li')
+        for txt in targetItem:
+            data.append(txt.get_text())
