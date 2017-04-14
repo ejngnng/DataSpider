@@ -11,7 +11,6 @@
 #
 ###################################################
 
-from Spider.letv import *
 from common.download import downloader
 import time
 import random
