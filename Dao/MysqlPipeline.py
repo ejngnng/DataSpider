@@ -76,25 +76,43 @@ def insert_data(connection, item):
     # finally:
     #     connection.close()
 
+def insert_dataWLTX(connection, item):
+    printItem(item)
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("insert into car_desc(carType, \
+            startLocation,\
+            endLocation,\
+            price, \
+            carLen, \
+            carLoad, \
+            carAddr, \
+            carContacts, \
+            phoneNum, \
+            company) values(%s,%s,%s,%s,%s,\
+            %s,%s,%s,%s,%s)", \
+                           (item[0],
+                            item[1],
+                            item[2],
+                            item[3],
+                            item[4],
+                            item[5],
+                            item[6],
+                            item[7],
+                            item[8],
+                            item[9]))
+
+            connection.commit()
+    except:
+        print("insert data failed!!!")
+    # finally:
+    #     connection.close()
+
 def disconnectDB(connection):
     connection.close()
 
 def printItem(item):
     print('=====================')
-    print('item[0]:' + item[0])
-    print('item[1]:' + item[1])
-    print('item[2]:' + item[2])
-    print('item[3]:' + item[3])
-    print('item[4]:' + item[4])
-    print('item[5]:' + item[5])
-    print('item[6]:' + item[6])
-    print('item[7]:' + item[7])
-    print('item[8]:' + item[8])
-    print('item[10]:' + item[10])
-    print('item[11]:' + item[11])
-    print('item[12]:' + item[12])
-    print('item[14]:' + item[14])
-    print('item[15]:' + item[15])
-    print('item[16]:' + item[16])
-    print('item[17]:' + item[17])
+    for i in item:
+        print(i)
     print('====================')
