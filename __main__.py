@@ -67,11 +67,11 @@ class InsertDB(threading.Thread):
         self.dataQ = dataQue
 
     def run(self):
-
+        conn = MysqlPipeline.connectDB()
         while True:
             print('insert data')
             item = self.dataQ.get()
-            conn = MysqlPipeline.connectDB()
+
             MysqlPipeline.insert_data(conn, item)
 
 def main():
@@ -84,9 +84,9 @@ def main():
     Parser.start()
     Pipline.start()
 
-    # Producer.join()
-    # Parser.join()
-    # Pipline.join()
+    Producer.join()
+    Parser.join()
+    Pipline.join()
 
 
 if __name__ == '__main__':

@@ -73,8 +73,11 @@ def insert_data(connection, item):
             connection.commit()
     except:
         print("insert data failed!!!")
-    finally:
-        connection.close()
+    # finally:
+    #     connection.close()
+
+def disconnectDB(connection):
+    connection.close()
 
 def printItem(item):
     print('=====================')
