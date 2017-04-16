@@ -120,11 +120,11 @@ class ProducerUrl(threading.Thread):
             time.sleep(random.randint(3, 10))
 
 class ParserResponse(threading.Thread):
-    def __init__(self, threadName, urlQue, dataQue):
+    def __init__(self, threadName, urlQue):
         threading.Thread.__init__(self, name=threadName)
-        self.dataQ = dataQue
         self.urlQ = urlQue
     def run(self):
+        conn = MysqlPipeline.connectDB()
         while True:
             print("parse response")
             urls = self.urlQ.get()
@@ -132,20 +132,8 @@ class ParserResponse(threading.Thread):
             print('urls: ' + urls)
             response = download.downloader(url=urls)
             data = ParseData(response)
-            self.dataQ.put(getItem(data))
+            MysqlPipeline.insert_dataWLTX(conn, getItem(data))
             time.sleep(random.randint(1, 5))
-
-class InsertDB(threading.Thread):
-    def __init__(self, threadName, dataQue):
-        threading.Thread.__init__(self, name=threadName)
-        self.dataQ = dataQue
-
-    def run(self):
-        conn = MysqlPipeline.connectDB()
-        while True:
-            print('insert data')
-            item = self.dataQ.get()
-            MysqlPipeline.insert_dataWLTX(conn, item)
         MysqlPipeline.disconnectDB(conn)
 
 
@@ -153,15 +141,15 @@ def main():
     urlQueue = queue.Queue()
     itemQueue = queue.Queue()
     Producer = ProducerUrl('Pro', dataQue=urlQueue)
-    Parser = ParserResponse('Par', urlQue=urlQueue, dataQue=itemQueue)
-    Pipline = InsertDB('Insert', dataQue=itemQueue)
+    Parser = ParserResponse('Par', urlQue=urlQueue)
+ #   Pipline = InsertDB('Insert', dataQue=itemQueue)
     Producer.start()
     Parser.start()
-    Pipline.start()
+   # Pipline.start()
 
-    Producer.join()
-    Parser.join()
-    Pipline.join()
+    # Producer.join()
+    # Parser.join()
+    # Pipline.join()
 
 if __name__ == '__main__':
     # start_url = getTargetUrl()
