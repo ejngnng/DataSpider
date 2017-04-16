@@ -60,24 +60,38 @@ def getItem(data):
     for i, d in enumerate(data):
         print(str(i) + ':' + d)
     item = []
+    dataLen = len(data)
     # location = ParseLocation(data[1])
-    try:
+    if(dataLen == 11):
         s1 = data[1].split('：')
         s2 = s1[1].split()
         print(s2)
-        item.append(data[2])
-        item.append(s2[0])
-        item.append(s2[2])
-        item.append(data[2])
-        item.append(data[4])
-        item.append(data[3])
-        item.append(data[9])
-        item.append(data[7])
-        item.append(data[8])
-        item.append(data[6])
-    except:
-        print('data error')
-        pass
+        item.append('')         #carNum
+        item.append(data[2])    #carType
+        item.append(s2[0])      #startLocation
+        item.append(s2[2])      #endLocation
+        item.append(data[2])    #price
+        item.append(data[4])    #carLen
+        item.append(data[3])    #carLoad
+        item.append(data[9])    #carAddr
+        item.append(data[7])    #carContants
+        item.append(data[8])    #phoneNum
+        item.append(data[6])    #company
+    if(dataLen == 12):
+        s1 = data[2].split('：')
+        s2 = s1[1].split()
+        print(s2)
+        item.append(data[0])    #carNum
+        item.append(data[3])    #carType
+        item.append(s2[0])      #startLocation
+        item.append(s2[2])      #endLocation
+        item.append(data[6])    #price
+        item.append(data[5])    #carLen
+        item.append(data[4])    #carLoad
+        item.append(data[10])   #carAddr
+        item.append(data[8])    #carContants
+        item.append(data[9])    #phoneNum
+        item.append(data[7])    #company
     return item
 
 def ParseLocation(dataStr):

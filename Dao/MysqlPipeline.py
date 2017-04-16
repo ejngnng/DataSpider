@@ -80,7 +80,8 @@ def insert_dataWLTX(connection, item):
     printItem(item)
     try:
         with connection.cursor() as cursor:
-            cursor.execute("insert into car_desc(carType, \
+            cursor.execute("insert into car_desc(carNum, \
+            carType, \
             startLocation,\
             endLocation,\
             price, \
@@ -90,7 +91,7 @@ def insert_dataWLTX(connection, item):
             carContacts, \
             phoneNum, \
             company) values(%s,%s,%s,%s,%s,\
-            %s,%s,%s,%s,%s)", \
+            %s,%s,%s,%s,%s,%s)", \
                            (item[0],
                             item[1],
                             item[2],
@@ -100,7 +101,8 @@ def insert_dataWLTX(connection, item):
                             item[6],
                             item[7],
                             item[8],
-                            item[9]))
+                            item[9],
+                            item[10]))
 
             connection.commit()
     except:
