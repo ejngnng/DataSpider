@@ -22,7 +22,7 @@ import random
 
 def getTargetUrl():
     start_urls = []
-    for i in range(1, 7137):
+    for i in range(400, 7137):
         start_urls.append('http://www.56885.net/cheyuan/?0_0_0_0_0_0_0_0_0_0_'+ str(i) + '.html')
     return start_urls
 
@@ -138,18 +138,18 @@ class ParserResponse(threading.Thread):
 
 
 def main():
-    urlQueue = queue.Queue()
-    itemQueue = queue.Queue()
-    Producer = ProducerUrl('Pro', dataQue=urlQueue)
-    Parser = ParserResponse('Par', urlQue=urlQueue)
- #   Pipline = InsertDB('Insert', dataQue=itemQueue)
-    Producer.start()
-    Parser.start()
-   # Pipline.start()
-
-    # Producer.join()
-    # Parser.join()
-    # Pipline.join()
+    start_urls = getTargetUrl()
+    for ul in start_urls:
+        page = download.downloader(url=ul)
+        targetLink = getAtag(page)
+        conn = MysqlPipeline.connectDB()
+        for link in targetLink:
+            targetItem = download.downloader(url=link)
+            data = ParseData(targetItem)
+            item = getItem(data)
+            MysqlPipeline.insert_dataWLTX(conn, item)
+            time.sleep(random.randint(1, 5))
+        MysqlPipeline.disconnectDB(conn)
 
 if __name__ == '__main__':
     # start_url = getTargetUrl()
