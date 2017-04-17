@@ -22,7 +22,7 @@ import random
 
 def getTargetUrl():
     start_urls = []
-    for i in range(400, 7137):
+    for i in range(1466, 7137):
         start_urls.append('http://www.56885.net/cheyuan/?0_0_0_0_0_0_0_0_0_0_'+ str(i) + '.html')
     return start_urls
 
@@ -131,8 +131,11 @@ class ParserResponse(threading.Thread):
             print('ParserResponse urls')
             print('urls: ' + urls)
             response = download.downloader(url=urls)
-            data = ParseData(response)
-            MysqlPipeline.insert_dataWLTX(conn, getItem(data))
+            try:
+                data = ParseData(response)
+                MysqlPipeline.insert_dataWLTX(conn, getItem(data))
+            except:
+                pass
             time.sleep(random.randint(1, 5))
         MysqlPipeline.disconnectDB(conn)
 
