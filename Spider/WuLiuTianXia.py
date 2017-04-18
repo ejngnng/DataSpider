@@ -19,11 +19,13 @@ import threading
 import queue
 import time
 import random
+from common import MyLog
+
 
 def getTargetUrl():
     start_urls = []
-    for i in range(1467, 7137):
-        start_urls.append('http://www.56885.net/cheyuan/?0_0_0_0_0_0_0_0_0_0_'+ str(i) + '.html')
+    for i in range(5000, 7137):
+        start_urls.append('http://www.56885.net/cheyuan/?0_0_0_0_0_0_0_0_0_0_' + str(i) + '.html')
     return start_urls
 
 def getAtag(response):
@@ -144,8 +146,10 @@ class ParserResponse(threading.Thread):
 
 
 def main():
+    SpiderLog = MyLog.MyLog()
     start_urls = getTargetUrl()
     for ul in start_urls:
+        SpiderLog.debug(ul)
         page = download.downloader(url=ul)
         targetLink = getAtag(page)
         conn = MysqlPipeline.connectDB()
